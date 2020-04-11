@@ -10,6 +10,7 @@ Original file is located at
 import numpy as np
 import pandas as pd
 
+# training data
 data = pd.DataFrame([['sales', '31-35', '46-50', 'senior'],
         ['sales', '26-30', '26-30', 'junior'],
         ['sales', '31-35', '31-35', 'junior'],
@@ -27,6 +28,7 @@ data = pd.DataFrame([['sales', '31-35', '46-50', 'senior'],
 seniors = 0
 juniors = 0
 
+# loops to calculate the number of seniors and juniors in the data set
 for i in data['status']:
   if i == 'senior':
     seniors = seniors + 1
@@ -34,11 +36,20 @@ for i in data['status']:
   if i == 'junior':
     juniors += 1
 
+# prints out the number of seniors and juniors calculated by the loop
 print("Total Number of Seniors:", seniors)
 print("Total Number of Juniors:", juniors)
 
+# in case ZERO PROBABILITY occurs, it is resolved by the laplace smoothing
 def laplace_smoothing():
   
+    # creates a respective table for each column
+    
+  # smoothing the data in each senior and junior column of each entry
+    # actually changes the probability by adding the original probability with the formula 
+    # Laplace smoothing = (xi + a) / (N + ad) where i = 1....d
+  
+  # smoothing in dept_table
   for i in dept_table:
     if i == 'Senior':
       for j in range(len(dept_table)):
@@ -46,7 +57,7 @@ def laplace_smoothing():
         dept_table['Junior'][j] = (dept_table['Junior'][j] + 1/juniors) * juniors / (juniors + len(dept_table))
   
 
-  
+  # smoothing in age_table
   for i in age_table:
     if i == 'Senior':
       for j in range(len(dept_table)):
@@ -54,7 +65,7 @@ def laplace_smoothing():
         age_table['Junior'][j] = (age_table['Junior'][j] + 1/juniors) * juniors / (juniors + len(age_table))
   
 
- 
+ # smoothig in salary_table
   for i in salary_table: 
     if i == 'Senior':
       for j in range(len(salary_table)):
@@ -62,6 +73,7 @@ def laplace_smoothing():
         salary_table['Junior'][j] = (salary_table['Junior'][j] + 1/juniors) * juniors / (juniors + len(salary_table))
 
 
+# setting out respective tables for each column
 dept_table = pd.DataFrame([['sales', 1/5, 2/6],
                           ['systems', 2/5, 2/6],
                           ['marketing', 1/5, 1/6],
@@ -82,8 +94,11 @@ salary_table = pd.DataFrame([['46k...50k', 2/5, 2/6],
 
 
 laplace_smoothing()
+
+# test data, can be changed also
 test_data = ['marketing', '31...35', '46k...50k']
 
+# indexing out probabilities for each entry in the table
 for i in dept_table['Dept']:
   if test_data[0] == i:
     dept_senior = dept_table[dept_table['Dept']==test_data[0]]['Senior']
@@ -101,11 +116,12 @@ for i in salary_table['Salary']:
     slry_junior = salary_table[salary_table['Salary'] == test_data[2]]['Junior']
 
 
+# finding out prior probabilities
 total_senior = float(dept_senior) * float(age_senior) * float(slry_senior) * 5/11
 total_junior = float(dept_junior) * float(age_junior) * float(slry_junior) * 6/11
 
 
-
+# finding out posterior probability
 total_prob = ((float(dept_junior)+float(dept_senior))* (float(age_junior)+float(age_senior))* (float(slry_junior)+ float(slry_senior)))
 total_sen = total_senior / total_prob
 total_jun = total_junior / total_prob
@@ -121,5 +137,4 @@ if total_sen > total_jun:
 else:
   print("\nPrediction: Junior") 
 
-#print(list(enumerate(dept_table)))
 
