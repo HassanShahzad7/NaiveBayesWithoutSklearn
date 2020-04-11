@@ -127,7 +127,6 @@ total_sen = total_senior / total_prob
 total_jun = total_junior / total_prob
 
 
-laplace_smoothing()
 print("\nAfter Laplace Smoothing: ")
 print(total_sen)
 print(total_jun)
